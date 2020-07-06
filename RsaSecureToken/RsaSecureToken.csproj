@@ -40,6 +40,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthenticationService.cs" />
+    <Compile Include="ConsoleLog.cs" />
+    <Compile Include="ILog.cs" />
     <Compile Include="IProfileDao.cs" />
     <Compile Include="ITokenDao.cs" />
     <Compile Include="ProfileDao.cs" />

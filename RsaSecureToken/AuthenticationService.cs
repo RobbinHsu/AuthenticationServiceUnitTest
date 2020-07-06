@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace RsaSecureToken
 {
     public class AuthenticationService
     {
+        private ILog _log;
         private IProfileDao _profileDao;
         private ITokenDao _rsaToken;
 
@@ -12,12 +12,14 @@ namespace RsaSecureToken
         {
             _profileDao = new ProfileDao();
             _rsaToken = new RsaTokenDao();
+            _log = new ConsoleLog();
         }
 
-        public AuthenticationService(IProfileDao profileDao, ITokenDao rsaToken)
+        public AuthenticationService(IProfileDao profileDao, ITokenDao rsaToken, ILog consoleLog)
         {
             _profileDao = profileDao;
             _rsaToken = rsaToken;
+            _log = consoleLog;
         }
 
         public bool IsValid(string account, string password)
@@ -29,7 +31,6 @@ namespace RsaSecureToken
             var randomCode = _rsaToken.GetRandom(account);
 
             // 將發生錯誤的 account 寫入 log
-            var log = new ConsoleLog();
 
             // 驗證傳入的 password 是否等於自訂密碼 + RSA token亂數
             var validPassword = passwordFromDao + randomCode;
@@ -42,17 +43,9 @@ namespace RsaSecureToken
             else
             {
                 var content = $"account:{account} try to login failed";
-                log.Save(content);
+                _log.Save(content);
                 return false;
             }
-        }
-    }
-
-    public class ConsoleLog
-    {
-        public void Save(string content)
-        {
-            Console.WriteLine(content);
         }
     }
 
