@@ -30,7 +30,18 @@ namespace RsaSecureToken.Tests
         }
 
         [Test()]
-        public void IsValidTest()
+        public void should_log_when_invalid()
+        {
+            GivenProfile("robbin", "wrong password");
+            GivenToken("000000");
+
+            WhenInvalid();
+
+            ShouldLogWith("robbin", "login failed");
+        }
+
+        [Test()]
+        public void should_not_log_when_valid()
         {
             GivenProfile("robbin", "eee333");
             GivenToken("000000");
@@ -38,15 +49,14 @@ namespace RsaSecureToken.Tests
             ShouldBeValid("robbin", "eee333000000");
         }
 
-        [Test()]
-        public void IsValidTest_如何驗證當非法登入時有正確紀錄log()
+        private void ShouldLogWith(string account, string status)
         {
-            GivenProfile("robbin", "wrong password");
-            GivenToken("000000");
+            _log.Received(1).Save(Arg.Is<string>(x => x.Contains(account) && x.Contains(status)));
+        }
 
+        private void WhenInvalid()
+        {
             _target.IsValid("robbin", "eee333000000");
-
-            _log.Received(1).Save(Arg.Is<string>(x => x.Contains("robbin") && x.Contains("login failed")));
         }
 
         private void ShouldBeValid(string account, string password)
