@@ -40,7 +40,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthenticationService.cs" />
+    <Compile Include="IProfileDao.cs" />
+    <Compile Include="ITokenDao.cs" />
+    <Compile Include="ProfileDao.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RsaTokenDao.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
