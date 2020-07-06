@@ -41,7 +41,12 @@ namespace RsaSecureToken.Tests
         [Test()]
         public void IsValidTest_如何驗證當非法登入時有正確紀錄log()
         {
-            //Assert.Fail();
+            GivenProfile("robbin", "wrong password");
+            GivenToken("000000");
+
+            _target.IsValid("robbin", "eee333000000");
+
+            _log.Received(1).Save(Arg.Is<string>(x => x.Contains("robbin") && x.Contains("login failed")));
         }
 
         private void ShouldBeValid(string account, string password)
