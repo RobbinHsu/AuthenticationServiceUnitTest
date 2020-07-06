@@ -84,25 +84,4 @@ namespace RsaSecureToken.Tests
             _fakeProfileDao.GetPassword(account).Returns(password);
         }
     }
-
-    public class FakeRsaToken : ITokenDao
-    {
-        public string GetRandom(string account)
-        {
-            return "000000";
-        }
-    }
-
-    public class FakeProfileDao : IProfileDao
-    {
-        public string GetPassword(string account)
-        {
-            if (account == "robbin")
-            {
-                return "eee333";
-            }
-
-            return string.Empty;
-        }
-    }
 }
