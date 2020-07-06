@@ -56,19 +56,6 @@ namespace RsaSecureToken
         }
     }
 
-    public interface IProfileDao
-    {
-        string GetPassword(string account);
-    }
-
-    public class ProfileDao : IProfileDao
-    {
-        public string GetPassword(string account)
-        {
-            return Context.GetPassword(account);
-        }
-    }
-
     public static class Context
     {
         public static Dictionary<string, string> profiles;
@@ -83,23 +70,6 @@ namespace RsaSecureToken
         public static string GetPassword(string key)
         {
             return profiles[key];
-        }
-    }
-
-    public interface ITokenDao
-    {
-        string GetRandom(string account);
-    }
-
-    public class RsaTokenDao : ITokenDao
-    {
-        public string GetRandom(string account)
-        {
-            var seed = new Random((int) DateTime.Now.Ticks & 0x0000FFFF);
-            var result = seed.Next(0, 999999).ToString("000000");
-            Console.WriteLine("randomCode:{0}", result);
-
-            return result;
         }
     }
 }

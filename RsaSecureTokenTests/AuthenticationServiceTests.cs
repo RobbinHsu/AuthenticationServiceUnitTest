@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NSubstitute;
 using NUnit.Framework;
 using RsaSecureToken;
 using Assert = NUnit.Framework.Assert;
@@ -13,16 +14,41 @@ namespace RsaSecureToken.Tests
     [TestFixture]
     public class AuthenticationServiceTests
     {
+        private IProfileDao _fakeProfileDao;
+        private ITokenDao _fakeRsaToken;
+        private AuthenticationService _target;
+
+
+        [SetUp]
+        public void Setup()
+        {
+            _fakeProfileDao = Substitute.For<IProfileDao>();
+            _fakeRsaToken = Substitute.For<ITokenDao>();
+            _target = new AuthenticationService(_fakeProfileDao, _fakeRsaToken);
+        }
+
         [Test()]
         public void IsValidTest()
         {
-            var fakeProfileDao = new FakeProfileDao();
-            var fakeRsaToken = new FakeRsaToken();
-            var target = new AuthenticationService(fakeProfileDao, fakeRsaToken);
+            GivenProfile("robbin", "eee333");
+            GivenToken("000000");
 
-            var actual = target.IsValid("robbin", "eee333000000");
+            ShouldBeValid("robbin", "eee333000000");
+        }
 
-            Assert.IsTrue(actual);
+        private void ShouldBeValid(string account, string password)
+        {
+            Assert.IsTrue(_target.IsValid(account, password));
+        }
+
+        private void GivenToken(string token)
+        {
+            _fakeRsaToken.GetRandom("").ReturnsForAnyArgs(token);
+        }
+
+        private void GivenProfile(string account, string password)
+        {
+            _fakeProfileDao.GetPassword(account).Returns(password);
         }
 
         //[Test()]
