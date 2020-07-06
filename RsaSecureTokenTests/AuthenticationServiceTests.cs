@@ -16,7 +16,7 @@ namespace RsaSecureToken.Tests
     {
         private IProfileDao _fakeProfileDao;
         private ITokenDao _fakeRsaToken;
-        private ILog _log;
+        private ILog _fakeLog;
         private AuthenticationService _target;
 
 
@@ -25,8 +25,8 @@ namespace RsaSecureToken.Tests
         {
             _fakeProfileDao = Substitute.For<IProfileDao>();
             _fakeRsaToken = Substitute.For<ITokenDao>();
-            _log = Substitute.For<ILog>();
-            _target = new AuthenticationService(_fakeProfileDao, _fakeRsaToken, _log);
+            _fakeLog = Substitute.For<ILog>();
+            _target = new AuthenticationService(_fakeProfileDao, _fakeRsaToken, _fakeLog);
         }
 
         [Test()]
@@ -45,13 +45,23 @@ namespace RsaSecureToken.Tests
         {
             GivenProfile("robbin", "eee333");
             GivenToken("000000");
+            WhenValid();
+            ShouldNotLog();
+        }
 
-            ShouldBeValid("robbin", "eee333000000");
+        private void ShouldNotLog()
+        {
+            _fakeLog.DidNotReceiveWithAnyArgs().Save(Arg.Any<string>());
+        }
+
+        private void WhenValid()
+        {
+            _target.IsValid("robbin", "eee333000000");
         }
 
         private void ShouldLogWith(string account, string status)
         {
-            _log.Received(1).Save(Arg.Is<string>(x => x.Contains(account) && x.Contains(status)));
+            _fakeLog.Received(1).Save(Arg.Is<string>(x => x.Contains(account) && x.Contains(status)));
         }
 
         private void WhenInvalid()
