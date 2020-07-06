@@ -16,6 +16,7 @@ namespace RsaSecureToken.Tests
     {
         private IProfileDao _fakeProfileDao;
         private ITokenDao _fakeRsaToken;
+        private ILog _log;
         private AuthenticationService _target;
 
 
@@ -24,7 +25,8 @@ namespace RsaSecureToken.Tests
         {
             _fakeProfileDao = Substitute.For<IProfileDao>();
             _fakeRsaToken = Substitute.For<ITokenDao>();
-            _target = new AuthenticationService(_fakeProfileDao, _fakeRsaToken);
+            _log = Substitute.For<ILog>();
+            _target = new AuthenticationService(_fakeProfileDao, _fakeRsaToken, _log);
         }
 
         [Test()]
@@ -34,6 +36,12 @@ namespace RsaSecureToken.Tests
             GivenToken("000000");
 
             ShouldBeValid("robbin", "eee333000000");
+        }
+
+        [Test()]
+        public void IsValidTest_如何驗證當非法登入時有正確紀錄log()
+        {
+            //Assert.Fail();
         }
 
         private void ShouldBeValid(string account, string password)
@@ -49,12 +57,6 @@ namespace RsaSecureToken.Tests
         private void GivenProfile(string account, string password)
         {
             _fakeProfileDao.GetPassword(account).Returns(password);
-        }
-
-        //[Test()]
-        public void IsValidTest_如何驗證當非法登入時有正確紀錄log()
-        {
-            //Assert.Fail();
         }
     }
 
