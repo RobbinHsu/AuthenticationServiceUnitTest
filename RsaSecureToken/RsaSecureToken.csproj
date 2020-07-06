@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="AuthenticationService.cs" />
     <Compile Include="ConsoleLog.cs" />
+    <Compile Include="Context.cs" />
     <Compile Include="ILog.cs" />
     <Compile Include="IProfileDao.cs" />
     <Compile Include="ITokenDao.cs" />
